@@ -1,14 +1,119 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
-    <title>Welcome Page</title>
-  </head>
-  <body>
-    <h1>Welcome to my website!</h1>
-    <p>Choose one of the following options:</p>
-    <button onclick="location.href='./generate.html'">Natural Language Generation</button>
-    <button onclick="location.href='./generate.html'">Page 2</button>
-    <button onclick="location.href='./generate.html'">Page 3</button>
-  </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Language Processing</title>
+</head>
+<body>
+  <h1>Language Processing</h1>
+  <p>Please select a task:</p>
+  <select onchange="showTask()" id="task">
+    <option value="">--Select Task--</option>
+    <option value="translation">Translation</option>
+    <option value="generation">Natural Language Generation</option>
+    <option value="sentiment">Sentiment Analysis</option>
+  </select>
+
+  <div id="translation" style="display:none;">
+    <h2>Translation</h2>
+    <form id="translation-form" onsubmit="submitForm('translation-form', 'translation-output','/translator')">
+      <label for="translation-input">Enter text to translate:</label><br>
+      <input type="text" id="translation-input" name="input"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <br>
+    <label for="translation-output">Translation output:</label><br>
+    <textarea id="translation-output" name="output" rows="4" cols="50"></textarea>
+  </div>
+
+  <!-- <div id="generation" style="display:none;">
+    <h2>Natural Language Generation</h2>
+    <form id="generation-form" onsubmit="submitForm('generation-form', 'generation-output')">
+      <label for="generation-input">Enter prompt for generation:</label><br>
+      <input type="text" id="generation-input" name="input"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <br>
+    <label for="generation-output">Generation output:</label><br>
+    <textarea id="generation-output" name="output" rows="4" cols="50"></textarea>
+  </div> -->
+  <div id="generation" style="display:none;">
+    <h2>Natural Language Generation</h2>
+    <form id="generation-form" onsubmit="submitForm('generation-form', 'generation-output', '/generator')">
+      <label for="generation-input">Enter prompt for generation:</label><br> 
+      <input type="text" id="generation-input" name="text"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <br>
+    <label for="generation-output">Generation output:</label><br>
+    <textarea id="generation-output" name="output" rows="4" cols="50"></textarea>
+  </div>
+  
+  <script>
+  async function submitForm(formId, outputId, url) {
+    const form = document.getElementById(formId);
+    const formData = new FormData(form);
+    const response = await fetch(url, {
+      method: 'POST',
+      body: JSON.stringify({
+        text: formData.get('text')
+      }),
+    });
+    const data = await response.json();
+    const outputField = document.getElementById(outputId);
+    outputField.value = data.output || "";
+  }
+  </script>
+  
+
+
+
+  <div id="sentiment" style="display:none;">
+    <h2>Sentiment Analysis</h2>
+    <form id="sentiment-form" onsubmit="submitForm('sentiment-form', 'sentiment-output','/analyzer')">
+      <label for="sentiment-input">Enter text for sentiment analysis:</label><br>
+      <input type="text" id="sentiment-input" name="input"><br><br>
+      <input type="submit" value="Submit">
+    </form>
+    <br>
+    <label for="sentiment-output">Sentiment analysis output:</label><br>
+    <textarea id="sentiment-output" name="output" rows="4" cols="50"></textarea>
+  </div>
+
+  <script>
+    function showTask() {
+      var task = document.getElementById("task").value;
+      var tasks = ["translation", "generation", "sentiment"];
+
+      for (var i = 0; i < tasks.length; i++) {
+        var div = document.getElementById(tasks[i]);
+
+        if (task == tasks[i]) {
+          div.style.display = "block";
+        } else {
+          div.style.display = "none";
+        }
+      }
+    }
+
+    // function submitForm(formName, outputId) {
+    //     event.preventDefault();
+    //     var form = document.getElementById(formName);
+    //     var input = form.elements["input"].value;
+    //     var url = "/api/" + formName;
+    //     var xhr = new XMLHttpRequest();
+    //     xhr.open("POST", url, true);
+    //     xhr.setRequestHeader("Content-Type", "application/json");
+    //     xhr.onreadystatechange = function () {
+    //         if (xhr.readyState === 4 && xhr.status === 200) {
+    //         var json = JSON.parse(xhr.responseText);
+    //         var output = document.getElementById(outputId);
+    //         output.innerHTML = json.output;
+    //         }
+    //     };
+    //     var data = JSON.stringify({"input": input});
+    //     xhr.send(data);
+    // }
+    </script>
+</body>
 </html>

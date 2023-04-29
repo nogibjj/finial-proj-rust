@@ -6,6 +6,16 @@ rust-version:
 	rustup --version			#rust toolchain manager
 	clippy-driver --version		#rust linter
 
+install:
+	cargo clean &&\
+		cargo build -j 1
+
+build:
+	docker build -t rust-bert-rocket .
+
+rundocker:
+	docker run -p 8000:8000 rust-bert-rocket
+
 format:
 	cargo fmt --quiet
 
